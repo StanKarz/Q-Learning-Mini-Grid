@@ -7,15 +7,7 @@ import main
 env = ImgObsWrapper(gym.make("MiniGrid-Empty-8x8-v0"))
 eval_rewards_dict = {}
 eval_rewards_array = []
-
-# Hyper parameters
 total_episodes = 500
-max_epsilon = 1.0
-min_epsilon = 0.05
-decay_rate = 0.0008
-max_steps = 50
-discount_factor = 0.95
-learning_rate = 0.15
 
 
 def to_tuple(array):
