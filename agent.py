@@ -4,8 +4,7 @@ from gym_minigrid.wrappers import *
 import random
 import numpy as np
 
-env = gym.make("MiniGrid-Empty-8x8-v0")
-env = ImgObsWrapper(env)
+env = ImgObsWrapper(gym.make("MiniGrid-Empty-8x8-v0"))
 
 
 class QLearningAgent:
@@ -13,16 +12,13 @@ class QLearningAgent:
         self.epsilon = epsilon
         self.gamma = discount_factor
         self.lr = learning_rate
-
-        # Initialise Q Table as dict
         self.q_table = {}
 
-    def take_action(self, state):
-
+    def take_action(self, state, step):
         # For exploration, select a relevant random action
-        action_space = [0, 1, 2]
-        random_action = random.choice(action_space)
-
+        random.seed(351)
+        random_actions_arr = [random.randint(0, 2) for i in range(0, step + 1)]
+        random_action = random_actions_arr[step]
         # Generate random number from 0 to 1, to be used for comparison with epsilon value
         random_num = random.uniform(0, 1)
 
@@ -42,9 +38,13 @@ class QLearningAgent:
         return action
 
     def update_q_table(self, state, action, reward, next_state):
-
         # Store max Q-value associated with the next state
         max_q_val = max(self.q_table[next_state, 0], self.q_table[next_state, 1], self.q_table[next_state, 2])
-
         # Q-table update
         self.q_table[state, action] = self.q_table[state, action] + self.lr * (reward + (self.gamma * max_q_val) - self.q_table[state, action])
+
+    def get_noise(self, mu, sigma):
+        # mean and standard deviation
+        distribution = np.random.normal(mu, sigma, 1000)
+        noise = random.choice(distribution)
+        return noise
